@@ -34,6 +34,20 @@
 
 ---
 
+## Теоретический ответ — скриншоты
+
+<p align="center">
+  <img src="public/screenshot1.png" width="700"/>
+  <img src="public/screenshot2.png" width="700"/>
+  <img src="public/screenshot3.png" width="700"/>
+  <img src="public/screenshot4.png" width="700"/>
+  <img src="public/screenshot5.png" width="700"/>
+  <img src="public/screenshot6.png" width="700"/>
+  <img src="public/screenshot7.png" width="700"/>
+</p>
+
+---
+
 ## Стек технологий
 
 - **Java 17**
