@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Билет 9 — Долженко Р.П.</string>
+    <string name="practice1_title">Практика 1: Переключатель (Switch)</string>
+    <string name="practice2_title">Практика 2: ViewPager с вкладками</string>
+    <string name="switch_on">ВКЛ</string>
+    <string name="switch_off">ВЫКЛ</string>
+</resources>

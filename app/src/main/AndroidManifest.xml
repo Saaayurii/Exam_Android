@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Ticket9">
+
+        <!-- Главная Activity — меню выбора практики -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Практика 1: Switch -->
+        <activity
+            android:name=".SwitchDemoActivity"
+            android:exported="false"
+            android:label="@string/practice1_title" />
+
+        <!-- Практика 2: ViewPager с вкладками -->
+        <activity
+            android:name=".ViewPagerActivity"
+            android:exported="false"
+            android:label="@string/practice2_title" />
+
+    </application>
+
+</manifest>

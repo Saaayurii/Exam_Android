@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  android-build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ticket9-android-build
+    volumes:
+      # Монтируем выходную папку, чтобы APK был доступен на хосте
+      - ./app/build/outputs:/app/app/build/outputs
+      # Кэш Gradle для ускорения повторных сборок
+      - gradle-cache:/root/.gradle
+    environment:
+      - GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx2048m
+
+volumes:
+  gradle-cache:
+    driver: local

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Билет 9 — Теория — Долженко Р.П.</title>
+<style>
+  body {
+    font-family: "Times New Roman", serif;
+    font-size: 14pt;
+    margin: 2.5cm 2cm;
+    line-height: 1.5;
+    color: #000;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 24pt;
+    border-bottom: 2px solid #000;
+    padding-bottom: 12pt;
+  }
+  .header h1 { font-size: 18pt; margin: 0 0 6pt; }
+  .header p  { font-size: 12pt; margin: 2pt 0; }
+  h2 { font-size: 16pt; margin-top: 20pt; margin-bottom: 8pt; border-bottom: 1px solid #555; padding-bottom: 4pt; }
+  h3 { font-size: 14pt; margin-top: 14pt; margin-bottom: 6pt; }
+  h4 { font-size: 13pt; margin-top: 10pt; margin-bottom: 4pt; }
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-left: 4px solid #1976D2;
+    padding: 10pt;
+    font-family: "Courier New", monospace;
+    font-size: 10pt;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  code { font-family: "Courier New", monospace; font-size: 11pt; background: #eee; padding: 1pt 3pt; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10pt 0;
+    font-size: 12pt;
+  }
+  th, td { border: 1px solid #333; padding: 6pt 10pt; text-align: left; }
+  th { background: #1976D2; color: #fff; }
+  tr:nth-child(even) { background: #f2f7ff; }
+  blockquote {
+    border-left: 4px solid #1976D2;
+    padding-left: 12pt;
+    margin: 10pt 0;
+    color: #333;
+    font-style: italic;
+  }
+  .question-box {
+    background: #e3f2fd;
+    border: 2px solid #1976D2;
+    border-radius: 6px;
+    padding: 12pt 16pt;
+    margin: 14pt 0;
+    font-size: 15pt;
+    font-weight: bold;
+  }
+  .conclusion {
+    background: #e8f5e9;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    padding: 10pt 14pt;
+    margin-top: 16pt;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Экзаменационный билет №9</h1>
+  <p><strong>Дисциплина:</strong> Программирование мобильных устройств</p>
+  <p><strong>Студент:</strong> Долженко Роман Павлович</p>
+  <p><strong>Специальность:</strong> 09.03.01 &nbsp;|&nbsp; <strong>Группа:</strong> ИВТ-1</p>
+  <p><strong>Университет:</strong> ДонГУ, Физико-технический факультет</p>
+</div>
+
+<div class="question-box">
+  Теоретический вопрос: Объясните работу адаптера в RecyclerView и ViewPager
+</div>
+
+<!-- ============================================================ -->
+<h2>1. Понятие адаптера в Android</h2>
+
+<p>
+  <strong>Адаптер (Adapter)</strong> — это реализация паттерна проектирования «Адаптер» в Android.
+  Он выступает посредником между <strong>источником данных</strong> (список, массив, БД) и
+  <strong>визуальным компонентом</strong> (RecyclerView, ViewPager), который эти данные отображает.
+</p>
+
+<p>Адаптер решает три задачи:</p>
+<ol>
+  <li>Сообщить виджету <strong>сколько</strong> элементов нужно показать.</li>
+  <li><strong>Создать</strong> визуальный контейнер для каждого элемента (ViewHolder / Fragment).</li>
+  <li><strong>Заполнить</strong> контейнер данными для конкретной позиции.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2>2. Адаптер в RecyclerView</h2>
+
+<h3>2.1 Класс RecyclerView.Adapter</h3>
+
+<p>
+  Для работы с RecyclerView создаётся класс, унаследованный от <code>RecyclerView.Adapter&lt;VH&gt;</code>,
+  где <code>VH</code> — тип ViewHolder. Необходимо переопределить три метода:
+</p>
+
+<pre>
+public class MyAdapter extends RecyclerView.Adapter&lt;MyAdapter.ViewHolder&gt; {
+
+    private List&lt;String&gt; dataList;
+
+    public MyAdapter(List&lt;String&gt; dataList) {
+        this.dataList = dataList;
+    }
+
+    // 1. Создаёт новый ViewHolder — inflate макета элемента списка.
+    //    Вызывается только когда нет переиспользуемых ViewHolder-ов в пуле.
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_list, parent, false);
+        return new ViewHolder(view);
+    }
+
+    // 2. Привязывает данные к существующему ViewHolder.
+    //    Вызывается каждый раз, когда элемент появляется на экране.
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.textView.setText(dataList.get(position));
+    }
+
+    // 3. Сообщает количество элементов в списке.
+    @Override
+    public int getItemCount() {
+        return dataList.size();
+    }
+
+    // ViewHolder — хранит ссылки на View одного элемента списка.
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView textView;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.tvItem);
+        }
+    }
+}
+</pre>
+
+<h3>2.2 Паттерн ViewHolder</h3>
+
+<p>
+  <strong>ViewHolder</strong> — вложенный класс, кэширующий ссылки на элементы UI одного элемента списка.
+  Без него метод <code>findViewById()</code> вызывался бы при каждой прокрутке, что приводило к
+  обходу всего дерева View и значительному замедлению. ViewHolder устраняет эту проблему:
+  ссылки на View создаются один раз при создании ViewHolder-а, а при повторном использовании
+  — только перезаписываются данные.
+</p>
+
+<h3>2.3 Механизм переиспользования (Recycling)</h3>
+
+<p>
+  RecyclerView не создаёт View для каждого элемента данных. Он поддерживает
+  <strong>пул (RecycledViewPool)</strong> невидимых ViewHolder-ов:
+</p>
+
+<blockquote>
+  При прокрутке ViewHolder ушедшего за край элемента помещается в пул.
+  Когда появляется новый элемент снизу — берётся ViewHolder из пула и заполняется новыми данными
+  (вызов <code>onBindViewHolder</code>). Таким образом в памяти одновременно находится лишь
+  небольшое количество ViewHolder-ов, независимо от размера списка.
+</blockquote>
+
+<p>Это позволяет отображать <strong>миллионы элементов</strong> без переполнения памяти.</p>
+
+<h3>2.4 Уведомление об изменениях данных</h3>
+
+<pre>
+adapter.notifyDataSetChanged();          // Перерисовать весь список (неэффективно)
+adapter.notifyItemInserted(position);    // Добавлен элемент на позицию
+adapter.notifyItemRemoved(position);     // Удалён элемент
+adapter.notifyItemChanged(position);     // Изменились данные элемента
+</pre>
+
+<p>
+  Для сложных изменений используется <strong>DiffUtil</strong> — утилита, автоматически
+  вычисляющая минимальное количество операций для перехода от старого списка к новому.
+</p>
+
+<!-- ============================================================ -->
+<h2>3. Адаптер в ViewPager2</h2>
+
+<h3>3.1 FragmentStateAdapter</h3>
+
+<p>
+  ViewPager2 работает с адаптером типа <code>FragmentStateAdapter</code>. Не случайно:
+  внутри ViewPager2 использует <strong>RecyclerView</strong> как механизм прокрутки страниц.
+</p>
+
+<pre>
+public class TabsPagerAdapter extends FragmentStateAdapter {
+
+    private final int pageCount;
+
+    public TabsPagerAdapter(FragmentActivity activity, int pageCount) {
+        super(activity);
+        this.pageCount = pageCount;
+    }
+
+    // Создаёт Fragment для страницы с указанной позицией.
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        switch (position) {
+            case 0:  return new HomeFragment();
+            case 1:  return new ProfileFragment();
+            case 2:  return new AboutFragment();
+            default: return new HomeFragment();
+        }
+    }
+
+    // Возвращает общее количество страниц.
+    @Override
+    public int getItemCount() {
+        return pageCount;
+    }
+}
+</pre>
+
+<h3>3.2 Управление жизненным циклом фрагментов</h3>
+
+<p>
+  <code>FragmentStateAdapter</code> автоматически управляет жизненным циклом фрагментов
+  через <code>FragmentManager</code>:
+</p>
+
+<table>
+  <tr>
+    <th>Состояние фрагмента</th>
+    <th>Что происходит</th>
+  </tr>
+  <tr>
+    <td>Становится видимым</td>
+    <td><code>onCreateView()</code> → <code>onStart()</code> → <code>onResume()</code></td>
+  </tr>
+  <tr>
+    <td>Уходит за offscreenPageLimit</td>
+    <td><code>onPause()</code> → <code>onStop()</code> → <code>onDestroyView()</code> (состояние сохраняется в Bundle)</td>
+  </tr>
+  <tr>
+    <td>Возвращается в область видимости</td>
+    <td><code>onCreateView()</code> с восстановлением состояния из Bundle</td>
+  </tr>
+</table>
+
+<p>
+  Это принципиально отличает <code>FragmentStateAdapter</code> от устаревшего
+  <code>FragmentPagerAdapter</code> (ViewPager 1), который <em>не уничтожал</em>
+  фрагменты, что приводило к избыточному потреблению памяти.
+</p>
+
+<h3>3.3 Связка TabLayout + ViewPager2</h3>
+
+<pre>
+// TabLayoutMediator синхронизирует вкладки и страницы
+new TabLayoutMediator(tabLayout, viewPager,
+        (tab, position) -> tab.setText(tabTitles[position])
+).attach();
+</pre>
+
+<p>
+  <strong>TabLayoutMediator</strong> — медиатор, который:
+</p>
+<ul>
+  <li>Автоматически синхронизирует выбранную вкладку TabLayout с текущей страницей ViewPager2</li>
+  <li>Обрабатывает свайп страниц и клики по вкладкам без дополнительного кода</li>
+  <li>Устраняет необходимость вручную слушать <code>OnPageChangeCallback</code></li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>4. Сравнение адаптеров RecyclerView и ViewPager2</h2>
+
+<table>
+  <tr>
+    <th>Критерий</th>
+    <th>RecyclerView.Adapter</th>
+    <th>FragmentStateAdapter</th>
+  </tr>
+  <tr>
+    <td>Базовый класс</td>
+    <td><code>RecyclerView.Adapter&lt;VH&gt;</code></td>
+    <td><code>RecyclerView.Adapter&lt;VH&gt;</code></td>
+  </tr>
+  <tr>
+    <td>Единица содержимого</td>
+    <td>View (ViewHolder)</td>
+    <td>Fragment</td>
+  </tr>
+  <tr>
+    <td>Переиспользование</td>
+    <td>Активное (RecycledViewPool)</td>
+    <td>Ограниченное (offscreenPageLimit)</td>
+  </tr>
+  <tr>
+    <td>Управление состоянием</td>
+    <td>Ручное (DiffUtil, notify*)</td>
+    <td>Автоматическое (FragmentManager)</td>
+  </tr>
+  <tr>
+    <td>Типичное применение</td>
+    <td>Большие списки данных</td>
+    <td>Страницы/вкладки (3–10 шт.)</td>
+  </tr>
+</table>
+
+<!-- ============================================================ -->
+<div class="conclusion">
+  <h2 style="margin-top:0">5. Вывод</h2>
+  <p>
+    Адаптер в Android — ключевой посредник между данными и UI. В <strong>RecyclerView</strong>
+    адаптер совместно с паттерном ViewHolder обеспечивает эффективное переиспользование View
+    при работе с большими наборами данных. В <strong>ViewPager2</strong> адаптер
+    (<code>FragmentStateAdapter</code>) управляет фрагментами как страницами, интегрируется
+    с <code>FragmentManager</code> для корректного управления жизненным циклом и экономии памяти.
+    Несмотря на разное назначение, оба адаптера базируются на одном внутреннем механизме
+    RecyclerView, что обеспечивает единообразие и предсказуемое поведение системы.
+  </p>
+</div>
+
+</body>
+</html>
